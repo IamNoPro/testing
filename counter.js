@@ -1,9 +1,17 @@
 export function setupCounter(element) {
   let counter = 0
-  const setCounter = (count) => {
-    counter = count
-    element.innerHTML = `count is ${counter}`
+  function notifyMe() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+    Notification.requestPermission(function(result) {
+    if (result === 'granted') {
+        navigator.serviceWorker.ready.then(function(registration) {
+        registration.showNotification('Notification with ServiceWorker');
+        });
+    }
+    });
   }
-  element.addEventListener('click', () => setCounter(counter + 1))
-  setCounter(0)
+  element.addEventListener('click', () => notifyMe())
+  
 }
